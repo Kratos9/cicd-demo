@@ -35,30 +35,40 @@ jobs:
       
       - name: 🧪 Ejecutar tests
         run: npm test
-      
-      # Información específica del SO (comandos diferentes según el OS)
-      - name: 💻 Información del Sistema Operativo
-        shell: bash
+
+      ##########################################
+      # INFO DEL SISTEMA — CORREGIDO POR OS
+      ##########################################
+
+      - name: 💻 Info sistema Linux
+        if: runner.os == 'Linux'
         run: |
           echo "===================================="
-          echo "Sistema: ${{ matrix.os }}"
-          echo "Node.js: ${{ matrix.node-version }}"
-          echo "Runner OS: $RUNNER_OS"
-          echo "===================================="
-          if [ "$RUNNER_OS" == "Linux" ]; then
-            echo "Ejecutando en Linux"
-            uname -a
-            cat /etc/os-release
-          elif [ "$RUNNER_OS" == "Windows" ]; then
-            echo "Ejecutando en Windows"
-            systeminfo | findstr /C:"OS"
-          elif [ "$RUNNER_OS" == "macOS" ]; then
-            echo "Ejecutando en macOS"
-            sw_vers
-          fi
+          echo "Ejecutando en Linux"
+          uname -a
+          cat /etc/os-release
           echo "===================================="
 
-  # Job que solo se ejecuta en Linux para comparar
+      - name: 💻 Info sistema Windows
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          Write-Host "===================================="
+          Write-Host "Ejecutando en Windows"
+          systeminfo | Select-String "OS"
+          Write-Host "===================================="
+
+      - name: 💻 Info sistema macOS
+        if: runner.os == 'macOS'
+        run: |
+          echo "===================================="
+          echo "Ejecutando en macOS"
+          sw_vers
+          echo "===================================="
+
+  ###############################################
+  #             JOB SOLO PARA LINUX
+  ###############################################
   linux-specific:
     name: 🐧 Operaciones específicas de Linux
     runs-on: ubuntu-latest
@@ -86,7 +96,9 @@ jobs:
           echo "Procesos del sistema:"
           ps aux | head -n 10
 
-  # Job que solo se ejecuta en Windows
+  ###############################################
+  #             JOB SOLO PARA WINDOWS
+  ###############################################
   windows-specific:
     name: 🪟 Operaciones específicas de Windows
     runs-on: windows-latest
@@ -107,7 +119,9 @@ jobs:
           Get-Process | Select-Object -First 10 Name, CPU, Id
           Write-Host "===================================="
 
-  # Job que resume los resultados
+  ###############################################
+  #                 RESUMEN FINAL
+  ###############################################
   summary:
     name: 📊 Resumen de Ejecución
     needs: [test-matrix, linux-specific, windows-specific]
