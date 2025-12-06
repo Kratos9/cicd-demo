@@ -23,10 +23,10 @@ jobs:
     
     steps:
       - name: 📥 Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: ⚙️ Configurar Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
       
@@ -65,7 +65,7 @@ jobs:
     
     steps:
       - name: 📥 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: 🐧 Comandos específicos de Linux
         run: |
@@ -93,7 +93,7 @@ jobs:
     
     steps:
       - name: 📥 Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: 🪟 Comandos específicos de Windows
         shell: pwsh

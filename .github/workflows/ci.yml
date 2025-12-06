@@ -18,11 +18,11 @@ jobs:
     steps:
       # Step 1: Hacer checkout del código del repositorio
       - name: 📥 Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       # Step 2: Configurar Node.js en el runner
       - name: ⚙️ Configurar Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
       
@@ -67,10 +67,10 @@ jobs:
     
     steps:
       - name: 📥 Checkout del código
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       
       - name: ⚙️ Configurar Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
       
@@ -85,7 +85,7 @@ jobs:
       
       # Guardar el código como artifact para poder descargarlo después
       - name: 📤 Subir artifact del build
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: aplicacion-build
           path: |
