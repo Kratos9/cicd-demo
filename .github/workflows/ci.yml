@@ -14,24 +14,29 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+      # Step 1: Checkout del código
       - name: 📥 Checkout del código
         uses: actions/checkout@v4
       
+      # Step 2: Configurar Node.js
       - name: ⚙️ Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
       
+      # Step 3: Instalar dependencias
       - name: 📦 Instalar dependencias
         run: npm install
 
-      # Step nuevo: ESLint
-      - name: 📝 Instalar dependencias
-        run: npm install
-        
+      # Step 4: Ejecutar ESLint
       - name: 📝 Ejecutar ESLint
-        run: npx eslint .
+        run: npm run lint
+
+      # Step 5: Ejecutar tests
+      - name: 🧪 Ejecutar tests
+        run: npm test
       
+      # Step 6: Información del sistema
       - name: 💻 Información del Sistema Operativo
         run: |
           echo "===================================="
