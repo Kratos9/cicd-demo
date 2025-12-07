@@ -1,64 +1,37 @@
 name: CI Pipeline Básico
 
-# Eventos que disparan este workflow
 on:
   push:
     branches: [ main, develop ]
   pull_request:
     branches: [ main ]
-  workflow_dispatch:  # Permite ejecución manual desde GitHub UI
+  workflow_dispatch:
 
-# Jobs a ejecutar
 jobs:
-  # Job 1: Ejecutar Tests
+  # Job 1: Ejecutar Lint y Tests
   test:
-    name: 🧪 Ejecutar Tests
+    name: 🧪 Lint y Ejecutar Tests
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Hacer checkout del código del repositorio
       - name: 📥 Checkout del código
         uses: actions/checkout@v4
       
-      # Step 2: Configurar Node.js en el runner
       - name: ⚙️ Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
       
-      # Step 3: Instalar dependencias (si las hay)
       - name: 📦 Instalar dependencias
         run: npm install
 
-      # ==========================
-      # 🆕 EJERCICIO 2: ESLINT
-      # ==========================
-
-      # Instalar ESLint si no existe
-      - name: 📥 Instalar ESLint (si no existe)
-        run: |
-          if [ ! -d "node_modules/eslint" ]; then
-            echo "ESLint no está instalado, instalando..."
-            npm install eslint --save-dev
-          else
-            echo "ESLint ya está instalado"
-          fi
-      # Fix permisos para ESLint
-      - name:  Dar permisos a ESLint
-        run: chmod +x ./node_modules/.bin/eslint
-
-      # Ejecutar Linter
-      - name:  Ejecutar Linter (ESLint)
+      # Step nuevo: ESLint
+      - name: 📝 Ejecutar ESLint
         run: npm run lint
-      # ==========================
-      # FIN EJERCICIO 2
-      # ==========================
 
-      # Step 4: Ejecutar los tests
       - name: 🧪 Ejecutar tests
         run: npm test
       
-      # Step 5: Mostrar información del sistema
       - name: 💻 Información del Sistema Operativo
         run: |
           echo "===================================="
@@ -83,10 +56,10 @@ jobs:
           free -h
           df -h
 
-  # Job 2: Build (se ejecuta DESPUÉS de que test pase)
+  # Job 2: Build (depende de que test pase)
   build:
     name: 🏗️ Build de la Aplicación
-    needs: test  # Este job depende de que 'test' se complete exitosamente
+    needs: test
     runs-on: ubuntu-latest
     
     steps:
@@ -107,7 +80,6 @@ jobs:
           node index.js
           echo "✅ Build completado exitosamente!"
       
-      # Guardar el código como artifact para poder descargarlo después
       - name: 📤 Subir artifact del build
         uses: actions/upload-artifact@v4
         with:
@@ -118,7 +90,7 @@ jobs:
             package.json
           retention-days: 5
 
-  # Job 3: Información del workflow (se ejecuta en paralelo con los otros)
+  # Job 3: Información del workflow
   workflow-info:
     name: 📊 Información del Workflow
     runs-on: ubuntu-latest
