@@ -27,7 +27,7 @@ jobs:
 
       # Step nuevo: ESLint
       - name: 📝 Ejecutar ESLint
-        run: npm run lint
+        run: npx eslint . --max-warnings=0
 
       - name: 🧪 Ejecutar tests
         run: npm test
