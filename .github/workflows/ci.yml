@@ -1,4 +1,4 @@
-name: CI Pipeline Multi-OS
+name: CI Pipeline Básico
 
 on:
   push:
@@ -8,43 +8,58 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Job 1: Tests con matriz Multi-OS y Node.js
-  test-matrix:
-    name: 🧪 Tests en múltiples entornos
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
-        node: ['16', '18', '20'] # diferentes versiones de Node.js
+  # Job 1: Ejecutar Lint y Tests
+  test:
+    name: 🧪 Lint y Ejecutar Tests
+    runs-on: ubuntu-latest
+    
     steps:
       - name: 📥 Checkout del código
         uses: actions/checkout@v4
-
+      
       - name: ⚙️ Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node }}
-
+          node-version: '18'
+      
       - name: 📦 Instalar dependencias
         run: npm install
 
+      # Step nuevo: ESLint
       - name: 📝 Ejecutar ESLint
         run: npx eslint .
-
+      
       - name: 🧪 Ejecutar tests
         run: npm test
-
-      - name: 💻 Información del sistema
+      
+      - name: 💻 Información del Sistema Operativo
         run: |
-          echo "OS: $RUNNER_OS, Node: ${{ matrix.node }}"
+          echo "===================================="
+          echo "INFORMACIÓN DEL RUNNER"
+          echo "===================================="
+          echo "Sistema Operativo: $RUNNER_OS"
+          echo "Arquitectura: $RUNNER_ARCH"
+          echo "Directorio de trabajo: $GITHUB_WORKSPACE"
+          echo "===================================="
+          echo "DETALLES DEL SISTEMA"
+          echo "===================================="
           uname -a
+          echo "===================================="
+          echo "VERSIONES DE SOFTWARE"
+          echo "===================================="
           node --version
           npm --version
+          echo "===================================="
+          echo "INFORMACIÓN DE RECURSOS"
+          echo "===================================="
+          nproc
+          free -h
+          df -h
 
-  # Job 2: Build (depende de que test-matrix pase)
+  # Job 2: Build con log y conditional step
   build:
     name: 🏗️ Build de la Aplicación
-    needs: test-matrix
+    needs: test
     runs-on: ubuntu-latest
     
     steps:
@@ -59,17 +74,21 @@ jobs:
       - name: 📦 Instalar dependencias
         run: npm install
       
-      - name: 🏗️ Ejecutar build
+      - name: 🏗️ Ejecutar build y generar log
         run: |
           echo "🏗️ Building application..."
-          node index.js
+          node index.js > build.log 2>&1
           echo "✅ Build completado exitosamente!"
-      
-      - name: 🚀 Simular Deployment (solo main)
+
+      # Conditional Step: solo en main (simulación de deploy)
+      - name: 🚀 Deployment simulado
         if: github.ref == 'refs/heads/main'
         run: |
-          echo "🚀 Ejecutando deployment simulado en main"
+          echo "🌟 Desplegando aplicación (simulación)..."
+          sleep 2
+          echo "✅ Deploy simulado completo!"
 
+      # Subir artifact del build
       - name: 📤 Subir artifact del build
         uses: actions/upload-artifact@v4
         with:
@@ -80,7 +99,39 @@ jobs:
             package.json
           retention-days: 5
 
-  # Job 3: Información del workflow
+      # Subir artifact del log
+      - name: 📤 Subir artifact del log
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          retention-days: 5
+
+  # Job 3: Matriz Multi-OS (Ejercicio 4)
+  multi-os-build:
+    name: 🌐 Build Multi-OS
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node: [16, 18]
+    
+    steps:
+      - name: 📥 Checkout del código
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+      
+      - name: 📦 Instalar dependencias
+        run: npm install
+
+      - name: 🏗️ Ejecutar build
+        run: node index.js
+
+  # Job 4: Información del workflow
   workflow-info:
     name: 📊 Información del Workflow
     runs-on: ubuntu-latest
@@ -88,9 +139,14 @@ jobs:
     steps:
       - name: 📊 Mostrar información del workflow
         run: |
+          echo "===================================="
+          echo "INFORMACIÓN DEL WORKFLOW"
+          echo "===================================="
           echo "Nombre del repositorio: ${{ github.repository }}"
           echo "Rama: ${{ github.ref }}"
           echo "SHA del commit: ${{ github.sha }}"
-          echo "Actor: ${{ github.actor }}"
-          echo "Evento: ${{ github.event_name }}"
+          echo "Actor que disparó el workflow: ${{ github.actor }}"
+          echo "Evento que disparó el workflow: ${{ github.event_name }}"
           echo "Número de ejecución: ${{ github.run_number }}"
+          echo "Intento de ejecución: ${{ github.run_attempt }}"
+          echo "===================================="
