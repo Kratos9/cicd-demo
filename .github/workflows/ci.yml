@@ -29,7 +29,28 @@ jobs:
       # Step 3: Instalar dependencias (si las hay)
       - name: 📦 Instalar dependencias
         run: npm install
-      
+
+      # ==========================
+      # 🆕 EJERCICIO 2: ESLINT
+      # ==========================
+
+      # Instalar ESLint si no existe
+      - name: 📥 Instalar ESLint (si no existe)
+        run: |
+          if [ ! -d "node_modules/eslint" ]; then
+            echo "ESLint no está instalado, instalando..."
+            npm install eslint --save-dev
+          else
+            echo "ESLint ya está instalado"
+          fi
+
+      # Ejecutar Linter
+      - name: 🔍 Ejecutar Linter (ESLint)
+        run: npm run lint
+      # ==========================
+      # FIN EJERCICIO 2
+      # ==========================
+
       # Step 4: Ejecutar los tests
       - name: 🧪 Ejecutar tests
         run: npm test
