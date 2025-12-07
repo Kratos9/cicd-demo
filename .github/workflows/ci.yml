@@ -43,9 +43,12 @@ jobs:
           else
             echo "ESLint ya está instalado"
           fi
+      # Fix permisos para ESLint
+      - name:  Dar permisos a ESLint
+        run: chmod +x ./node_modules/.bin/eslint
 
       # Ejecutar Linter
-      - name: 🔍 Ejecutar Linter (ESLint)
+      - name:  Ejecutar Linter (ESLint)
         run: npm run lint
       # ==========================
       # FIN EJERCICIO 2
