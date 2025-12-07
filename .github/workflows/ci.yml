@@ -26,11 +26,11 @@ jobs:
         run: npm install
 
       # Step nuevo: ESLint
-      - name: 📝 Instalar ESLint globalmente
-        run: npm install -g eslint@9.39.1
-
+      - name: 📝 Instalar dependencias
+        run: npm install
+        
       - name: 📝 Ejecutar ESLint
-        run: eslint .
+        run: npx eslint .
       
       - name: 💻 Información del Sistema Operativo
         run: |
