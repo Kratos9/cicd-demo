@@ -28,11 +28,11 @@ jobs:
       - name: 📦 Instalar dependencias
         run: npm install
 
-      # Step 4: Ejecutar ESLint
+      # Step 4: Ejecutar ESLint y fallar si hay errores o warnings
       - name: 📝 Ejecutar ESLint
-        run: npm run lint
+        run: npx eslint . --max-warnings=0
 
-      # Step 5: Ejecutar tests
+      # Step 5: Ejecutar tests (solo si el lint pasó)
       - name: 🧪 Ejecutar tests
         run: npm test
       
@@ -114,3 +114,4 @@ jobs:
           echo "Número de ejecución: ${{ github.run_number }}"
           echo "Intento de ejecución: ${{ github.run_attempt }}"
           echo "===================================="
+
