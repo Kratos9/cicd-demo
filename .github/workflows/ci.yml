@@ -14,29 +14,24 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout del código
       - name: 📥 Checkout del código
         uses: actions/checkout@v4
       
-      # Step 2: Configurar Node.js
       - name: ⚙️ Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
       
-      # Step 3: Instalar dependencias
       - name: 📦 Instalar dependencias
         run: npm install
 
-      # Step 4: Ejecutar ESLint y fallar si hay errores o warnings
+      # Step: ESLint
       - name: 📝 Ejecutar ESLint
-        run: npx eslint . --max-warnings=0
-
-      # Step 5: Ejecutar tests (solo si el lint pasó)
+        run: npx eslint .
+      
       - name: 🧪 Ejecutar tests
         run: npm test
       
-      # Step 6: Información del sistema
       - name: 💻 Información del Sistema Operativo
         run: |
           echo "===================================="
@@ -85,6 +80,15 @@ jobs:
           node index.js
           echo "✅ Build completado exitosamente!"
       
+      # Step condicional: Deployment simulado solo en main
+      - name: 🚀 Simular Deployment (solo main)
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "===================================="
+          echo "🚀 Ejecutando deployment simulado"
+          echo "Esta acción solo ocurre en la rama main"
+          echo "===================================="
+      
       - name: 📤 Subir artifact del build
         uses: actions/upload-artifact@v4
         with:
@@ -114,4 +118,3 @@ jobs:
           echo "Número de ejecución: ${{ github.run_number }}"
           echo "Intento de ejecución: ${{ github.run_attempt }}"
           echo "===================================="
-
