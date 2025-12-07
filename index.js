@@ -17,10 +17,17 @@ function division(a, b) {
     return a / b;
 }
 
+//  NUEVA FUNCIÓN DEL EJERCICIO 1
+function potencia(a, b) {
+    return Math.pow(a, b);
+}
+
 console.log("🚀 Aplicación iniciada");
 console.log("➕ Suma(5, 3):", suma(5, 3));
 console.log("➖ Resta(10, 4):", resta(10, 4));
 console.log("✖️  Multiplicación(6, 7):", multiplicacion(6, 7));
 console.log("➗ División(20, 4):", division(20, 4));
+console.log("⚡ Potencia(2, 3):", potencia(2, 3));
 
-module.exports = { suma, resta, multiplicacion, division };
+module.exports = { suma, resta, multiplicacion, division, potencia };
+

@@ -1,4 +1,4 @@
-const { suma, resta, multiplicacion, division } = require('./index.js');
+const { suma, resta, multiplicacion, division, potencia } = require('./index.js');
 
 function test() {
     let passed = 0;
@@ -108,6 +108,23 @@ function test() {
         }
     }
 
+    // NUEVO TEST 7: Potencia ejercicio 1
+    try {
+        if (potencia(2, 3) === 8) {
+            console.log("✅ Test 7 pasó: potencia(2, 3) = 8");
+            passed++;
+            tests.push({ name: "Potencia", status: "✅" });
+        } else {
+            console.log("❌ Test 7 falló: potencia(2, 3) debería ser 8");
+            failed++;
+            tests.push({ name: "Potencia", status: "❌" });
+        }
+    } catch (e) {
+        console.log("❌ Test 7 error:", e.message);
+        failed++;
+        tests.push({ name: "Potencia", status: "❌" });
+    }
+
     console.log("\n" + "=".repeat(50));
     console.log("📊 RESUMEN DE TESTS");
     console.log("=".repeat(50));
@@ -122,10 +139,10 @@ function test() {
     
     if (failed > 0) {
         console.error("\n❌ Tests fallaron. Código de salida: 1");
-        process.exit(1); // Salir con código de error
+        process.exit(1);
     } else {
         console.log("\n✅ Todos los tests pasaron exitosamente!");
-        process.exit(0); // Salir exitosamente
+        process.exit(0);
     }
 }
 
